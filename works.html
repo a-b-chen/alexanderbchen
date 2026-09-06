@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.className += ' js';</script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Works — Alexander B. Chen</title>
+<meta name="description" content="Papers and proofs, textbooks and course notes, mathematical models, and projects by Alexander B. Chen." />
+<meta name="theme-color" content="#f6f7f4" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  /* Publications disclosure (works page) */
+  details.pubs{ border-top:1px solid var(--rule); padding-top:.55rem; }
+  details.pubs > summary{
+    list-style:none; cursor:pointer; display:inline-flex; align-items:center; gap:.55rem;
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent); padding:.15rem 0;
+  }
+  details.pubs > summary::-webkit-details-marker{ display:none; }
+  details.pubs > summary::before{
+    content:""; flex:none; width:0; height:0;
+    border-left:5px solid currentColor; border-top:4px solid transparent; border-bottom:4px solid transparent;
+    transition:transform .18s ease;
+  }
+  details.pubs[open] > summary::before{ transform:rotate(90deg); }
+  details.pubs .count{ font-size:.66rem; letter-spacing:.06em; color:var(--muted); }
+  .pubs-body{ margin:.65rem 0 .3rem; padding-left:1.05rem; border-left:2px solid var(--redrule);
+    display:grid; gap:.7rem; }
+  .pubs-item{ font-family:var(--serif); font-size:1rem; line-height:1.5; color:var(--ink); }
+  .pubs-item .cite-title{ font-style:italic; }
+  .pubs-item .cite-meta{ color:var(--muted); }
+  .pubs-links{ margin-top:.45rem; display:flex; flex-wrap:wrap; gap:.4rem; }
+  /* right-flush venue (journal) on a citation line */
+  .cite-row{ display:flex; justify-content:space-between; align-items:baseline; gap:1.75rem; }
+  .cite-row > .cite-text{ min-width:0; }
+  .cite-row > .venue{ flex:none; white-space:nowrap; }
+  @media (max-width:640px){
+    .cite-row{ display:block; }
+    .cite-row > .venue{ display:block; text-align:right; margin-top:.3rem; white-space:normal; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="nav-name" href="index.html"><span class="sec-sign">(𝜀,𝛿)-</span>Alexander B. Chen<span class="sec-sign">-(𝜉,𝜂)</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="works.html" class="active">Works</a>
+      <a href="olympiads.html">Olympiads</a>
+      <a href="interests.html">Interests</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header id="top" class="band hero hero--tight">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <p class="eyebrow">Works</p>
+          <h1 class="title">Works &amp; projects</h1>
+          <p class="subtitle">The mathematics I&rsquo;ve written up carefully, and the books, models, and projects around it.</p>
+          <p class="abstract">
+            <span class="abs-label">On this page.</span><span>Over the course of the past 6-7 years, I'd like to say I've significantly improved my ability in writing something <i>up</i>. I've learned a ton about \(\LaTeX\) and the iPe extensive drawing editor, and I've put them to good use.
+
+            <span style="display: block; margin-top: 1em;"></span>
+
+            Growing up doing mostly olympiad mathematics, I've naturally grown used to problems with a definite answer -- whether it be proving a result known to be true or solving a numerical problem. But the beauty of this page lies in the mathematical unknown. Many of the things I do today, from research to lecture notes to teaching, have no "right way" of doing it. 
+
+            <span style="display: block; margin-top: 1em;"></span>
+
+            But I still end up doing it anyway -- and not just doing it, but I truly <i>enjoy</i> doing it. In fact, I'd gladly let it take up most of my day.</span>
+          </p>
+        </div>
+        <div class="hero-side">
+          <figure class="hero-photo">
+            <img src="img/diner.jpg" width="1200" height="1600" alt="Hunched over graph paper on a clipboard, working through a problem at a diner table" loading="lazy" />
+            <figcaption>Where most of my ideas come from.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== CONTENTS ===================== -->
+<div class="wrap toc-wrap">
+  <nav class="toc" aria-label="Contents">
+    <p class="toc-h">Contents</p>
+    <ul class="toc-list">
+      <li><span class="n">1.</span><a href="#anderson">Anderson localization</a></li>
+      <li><span class="n">2.</span><a href="#expository">Expository</a></li>
+      <li><span class="n">3.</span><a href="#nesbitt">Nesbitt, generalized</a></li>
+      <li><span class="n">4.</span><a href="#acute">Acute triangulation</a></li>
+      <li><span class="n">5.</span><a href="#isoperimetric">Isoperimetric polygon</a></li>
+      <li><span class="n">6.</span><a href="#modeling">Modeling</a></li>
+      <li><span class="n">7.</span><a href="#projects">Projects &amp; writings</a></li>
+    </ul>
+  </nav>
+</div>
+
+<span style="display: block; margin-top: 2em;"></span>
+
+<!-- ===================== PUBLICATIONS ===================== -->
+<div class="wrap pubs-wrap">
+  <details class="pubs">
+    <summary>Publications <span class="count">(1)</span></summary>
+    <div class="pubs-body">
+      <div class="pubs-item">
+        <div class="cite-row">
+          <div class="cite-text"><span class="cite-title">Measuring Localization in the One-Dimensional Anderson Model.</span> Alexander B. Chen, Emily Mei, Neev Shaw, Yiding Max Tang, Sebastian Vargas Loaiza, Xueyin Wang</div>
+          <span class="cite-meta venue"><em>Advances in Nonlinear Analysis</em></span>
+        </div>
+        <div class="pubs-links"><a class="chip sm" href="#anderson">full write-up &darr;</a> <a class="chip sm" href="https://drive.google.com/file/d/1TAHVKZBkKymMEy0KaXUgLcF5JeAeCWJZ/view?usp=sharing">MathFest poster</a></div>
+      </div>
+    </div>
+  </details>
+</div>
+
+<span style="display: block; margin-top: 2em;"></span>
+
+<!-- ===================== ANDERSON ===================== -->
+<section id="anderson" class="band band--tint">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">1.</div>
+      <h2 class="sec-h">Research</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p class="subhead">Publication · Advances in Nonlinear Analysis</p>
+      <p class="cite-row"><span class="cite-text"><em>Measuring Localization in the One-Dimensional Anderson Model.</em> Alexander B. Chen, Emily Mei, Neev Shaw, Yiding Max Tang, Sebastian Vargas Loaiza, Xueyin Wang through the <a href="https://sites.google.com/tamu.edu/suprema/home?authuser=0">PReMa program</a> with Texas A&amp;M.</span> <span class="venue"><em>Advances in Nonlinear Analysis</em></span></p>
+      <hr>
+      <p>A quantum particle on the lattice \( \mathbb{Z} \) is governed by the discrete Schr&ouml;dinger operator \( H_\omega = \Delta + V_\omega \), with the potential \( V_\omega(n) \) drawn i.i.d. at each site. Turning on that disorder does something dramatic: eigenstates that would otherwise spread across the whole line become exponentially localized. This project answers the quantitative question, not just <em>that</em> states localize but <em>how fast</em>, and with what guaranteed error.</p>
+      <p>I work with the eigenfunction correlator \( Q(k) \), which controls transport, and estimate the localization rate from a finite-volume model. The main analytic statement is that the empirical mean of \( -\tfrac{1}{k}\log Q(k) \) concentrates around the true rate \( \gamma \) with a Hoeffding-type bound: for \( M \) disorder samples,</p>
+      \[ \mathbb{P}\!\left( \big|\hat\gamma_k - \gamma\big| \ge \varepsilon \right) \le 2\,e^{-c M \varepsilon^2}, \]
+      <p>so the sample size for a target accuracy is fixed in advance rather than hoped for afterward, and it is the sample count, not the lattice size, that sets the error.</p>
+      <figure class="fig">
+        <img src="img/bernoulli.png" width="1900" height="677" loading="lazy" alt="Two plots of the negative log correlator per site versus k for Bernoulli disorder at N=1500, settling near a rate of 0.0169." />
+        <figcaption>\( -\tfrac{1}{k}\log \mathbb{E}\,Q(k) \) for Bernoulli disorder, N&nbsp;=&nbsp;1500.</figcaption>
+      </figure>
+      <p>Numerically I estimate the rate across Bernoulli, discrete-uniform, and continuous-uniform disorder. The eigenproblem is tridiagonal, so I never build the dense matrix, and I parallelize over the independent disorder configurations to reach \( N = 1500 \) with enough samples for the error bars above. The singular Bernoulli case sits at the edge of the theory, and the Monte Carlo bound is exactly what keeps it honest.</p>
+      <p><a class="chip sm" href="https://drive.google.com/file/d/1TAHVKZBkKymMEy0KaXUgLcF5JeAeCWJZ/view?usp=sharing">MathFest poster</a> <span class="chip sm dim">arXiv &middot; under review</span></p>
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ===================== EXPOSITORY ===================== -->
+<section id="expository" class="band">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">2.</div>
+      <h2 class="sec-h">Expository</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p>Most of what I write is meant to be handed to a student who is one insight away. Some of it is a full book; some is a lecture series for the math team.</p>
+      <ul class="entries">
+        <li>The <a href="https://drive.google.com/drive/folders/1TzajzytMm9_KOFgID2fVpZQm4fgK2Vyj?usp=sharing">abstract algebra &amp; number theory course</a> I plan on teaching during Math Team meetings throughout the 2026&ndash;27 school year. <span class="tag">designing coursework</span></li>
+        <li><a href="https://drive.google.com/drive/folders/1r_W_rcSNr5aO2rfgV_lvlJTAHKZkOKyN?usp=sharing">ARC</a> (AIME Roadmap &amp; Curricula), a competition-math textbook series written with Ryan Gong. The <a href="https://drive.google.com/file/d/14A-oxgwPII438xd9MjiBf7Wo_FjZIBlZ/view?usp=sharing">combinatorics volume</a> runs 573 pages; the number-theory and algebra volumes are underway. <span class="tag">series</span></li>
+        <li>A <a href="https://drive.google.com/file/d/14erpD4iBdTqWrkAp4FkGKjTiEO3C7mgQ/view?usp=sharing">multivariable calculus textbook</a> I wrote in my sophomore year, after my advisor joked that &ldquo;if I didn&rsquo;t like the textbook, why not write one myself?&rdquo; <span class="tag">360 pp.</span></li>
+        <li><a href="https://drive.google.com/drive/folders/1mnvM3ybdQNb9YjbQifzMkVz-eU6ssunP?usp=sharing">PDE lecture notes</a> from the graduate course: transport and wave equations, the heat equation, characteristics, energy methods, maximum principles, and the fundamental solution. <span class="tag">lecture notes</span>
+        <li><a href="https://drive.google.com/drive/folders/1tErktvqccqgccbKjz-OM4w-WpLTGF2ul?usp=sharing">Set theory projects,</a> from the axioms through ordinals and cardinals. <span class="tag">notes</span>
+        <li><a href="https://drive.google.com/drive/folders/1I8aH29_7IVlmoSVN3RyZNq_jhfpK6yOo?usp=sharing">Fractal geometry &amp; chaos:</a> a project sequence on iterated maps, the Mandelbrot and Julia sets, and the dynamics behind them. <span class="tag">notes · code</span>
+      </ul>
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ===================== NESBITT ===================== -->
+<section id="nesbitt" class="band band--tint">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">3.</div>
+      <h2 class="sec-h">Nesbitt, generalized</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p class="subhead">Manuscript · inequalities &amp; analysis</p>
+      <p><em>A Sharp Piecewise Generalization of Nesbitt&rsquo;s Inequality.</em> Solo manuscript, refined through referee-style review rounds.</p>
+      <p>Nesbitt&rsquo;s inequality says that for positive \( a,b,c \),</p>
+      \[ \frac{a}{b+c} + \frac{b}{c+a} + \frac{c}{a+b} \;\ge\; \frac{3}{2}, \]
+      <p>with equality at \( a=b=c \). Raise each term to a power, replacing the sum by \( \sum \left(\tfrac{a}{b+c}\right)^{\alpha} \), and ask what the sharp lower bound becomes as a function of \( \alpha \). The answer isn&rsquo;t one smooth formula: for small \( \alpha \) the symmetric point stays optimal, while past a threshold the extremum jumps to a boundary configuration. That threshold, a genuine phase transition in the sharp constant, lands exactly at</p>
+      \[ \alpha^\star = \log_2 \tfrac{3}{2} \approx 0.585. \]
+      <p>The paper establishes the sharp constant piecewise on each side of \( \alpha^\star \) and proves the crossover is where the two regimes meet. It&rsquo;s the result I&rsquo;m fondest of: an olympiad-flavored inequality that hides a clean transition once you let it vary.</p>
+      <p><a class="chip sm" href="https://drive.google.com/file/d/1Ca4lFZHIkeL6VFVME-FI2VKadyo1xivA/view?usp=sharing">read the paper</a></p>
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ===================== ACUTE ===================== -->
+<section id="acute" class="band">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">4.</div>
+      <h2 class="sec-h">Acute triangulation</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p class="subhead">Manuscript · discrete &amp; combinatorial geometry</p>
+      <p><em>Acute Triangulation of Obtuse Triangles: A Constructive Geometric Approach.</em></p>
+      <p>Any polygon can be cut into triangles; requiring every piece to be <em>acute</em> is much harder, and for a single obtuse triangle it isn&rsquo;t obvious it can be done at all. Motivated by a deliberately silly picture, a child who will only eat an obtuse cookie in acute-triangle bites, the paper proves that every obtuse triangle admits a triangulation into either seven or eight acute triangles.</p>
+      <p>The construction is explicit: drop the incenter, its angle bisectors, and perpendicular projections, then add a circle through the obtuse vertex, and verify each resulting piece is acute using congruence, symmetry, and angle inequalities. A short lemma handles the leftover near-right and very-obtuse cases, which is where the eighth triangle can appear. The method is universal rather than minimal, and I discuss where fewer pieces might be possible.</p>
+      <p><a class="chip sm" href="papers/acute-triangulation.pdf">read the paper</a></p>
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ===================== ISOPERIMETRIC ===================== -->
+<section id="isoperimetric" class="band band--tint">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">5.</div>
+      <h2 class="sec-h">Isoperimetric polygon</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p class="subhead">Manuscript · discrete &amp; combinatorial geometry</p>
+      <p><em>Maximizing the Area of Polygons with Fixed Perimeter: The Regular Polygon.</em></p>
+      <p>Among all simple \( n \)-gons with a fixed perimeter \( P \), which encloses the most area? The intuitive answer, the regular one, is true, and this paper proves it from the ground up. The engine is a lemma about a triangle inscribed in a circle: if two of its sides are unequal, sliding the odd vertex along the arc toward the perpendicular bisector strictly increases the area while fixing the base. Iterated, that forces a cyclic polygon to be regular to be optimal.</p>
+      <p>Extending past the cyclic case uses the isoperimetric inequality and a convexity argument on \( \sin \), giving the clean bound</p>
+      \[ S \;\le\; \frac{P^2}{4n}\,\cot\!\left(\frac{\pi}{n}\right), \]
+      <p>with equality exactly for the regular \( n \)-gon. Letting \( n \to \infty \) recovers \( S \to P^2/4\pi \), the circle, so the discrete result sits underneath the classical continuous one as a special case.</p>
+      <p><a class="chip sm" href="papers/isoperimetric-polygon.pdf">read the paper</a></p>
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ===================== MODELING ===================== -->
+<section id="modeling" class="band">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">6.</div>
+      <h2 class="sec-h">Modeling</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p>Take something messy from the real world, decide what actually matters, and write down the smallest model that still behaves like the thing.</p>
+      <ul class="entries">
+        <li><strong>HiMCM.</strong> The <a href="https://www.contest.comap.com/highschool/contests/himcm/instructions.html">High School Mathematical Contest in Modeling</a>, COMAP&rsquo;s international team contest, where up to four people take an open physical problem, design a model for it, and write the whole thing up as a research paper against the clock. Meritorious in 2025, Honorable Mention in 2024. <span class="tag">contest · 2024&ndash;25</span>
+          <ul class="sub">
+            <li><span class="yr">2024, Problem A.</span> A decision-tree expert system that sorts sports into families and scores each on popularity (Olympic YouTube view counts), accessibility, safety, and marketability, then recommends which ones the IOC should add or cut for the 2032 Brisbane Games. We generated the weighted inputs with Monte Carlo in Python and projected the fast-rising sports with logistic-growth curves. <a class="chip sm" href="https://drive.google.com/file/d/1yZSkJLbzX3YiFnF07ruonkP32KPWLvro/view?usp=sharing">pdf</a></li>
+            <li><span class="yr">2025, Problem B.</span> A Pressure-State-Response model ranking Super Bowl host cities by environmental footprint, which put Tampa on top as the most sustainable. I led the data side: ARIMA for emissions forecasting, AHP-CRITIC for weighting, TOPSIS for the ranking, and MICE with random-forest imputation for the missing indicators, then generalized the method to NBA All-Star Weekend. <a class="chip sm" href="https://drive.google.com/file/d/1XI2BHCVpS4T-9Frp54UZE2bwBmct69Z1/view?usp=sharing">pdf</a></li>
+          </ul>
+        </li>
+        <li><strong>A Mathematical Model of Roller Coaster Thrill.</strong> With Tina Xia. Reads a track as a height function \( y=f(x) \), scores each drop by its steepest descent angle times its height, and adds a fixed thrill value per inversion. <span class="tag">modeling</span> <a class="chip sm" href="papers/roller-coaster-thrill.pdf">pdf</a></li>
+        <li><strong>The Economic Effects of Trump&rsquo;s Recent Tariffs.</strong> With Tina Xia. A partial-equilibrium model of the 2025 tariffs across steel, autos, and consumer goods, calibrated to Census trade data, landing near a 0.7% GDP loss. <span class="tag">modeling</span> <a class="chip sm" href="papers/tariff-welfare-model.pdf">pdf</a></li>
+        <li><strong>Quantifying Sudoku Puzzle Difficulty.</strong> A difficulty score from clue count, candidate ambiguity per cell, and the hardest solving technique required, checked against standard easy-to-expert labels. <span class="tag">model</span> <a class="chip sm" href="papers/sudoku-difficulty.pdf">pdf</a></li>
+      </ul>
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ===================== PROJECTS & WRITINGS ===================== -->
+<section id="projects" class="band band--tint">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <div class="sec-num">7.</div>
+      <h2 class="sec-h">Projects &amp; writings</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p>Videos, essays, and side- projects, usually an attempt to explain something the moment after it finally made sense.</p>
+      <ul class="entries">
+        <li><a href="https://www.youtube.com/@orz67">orz67</a>, a YouTube channel where I animate proofs with Manim. <span class="tag">youtube</span></li>
+        <li>A sharp piecewise generalization of Nesbitt&rsquo;s inequality, my favorite original result. <span class="tag">paper</span> <a class="chip sm" href="#nesbitt">details</a></li>
+        <li><a href="https://docs.google.com/document/d/1S-1x8QNlAWStZuDROdJ3orwXG1-GeBewab5HMKH21T4/edit?usp=sharing">The Political Faucet</a>, a research paper arguing the U.S. treats science funding as a faucet, opened in Cold-War panic and shut in peacetime apathy, with the volatility resurfacing a decade later in domestic PhD production and U.S. results at the IMO. <span class="tag">u.s. history</span></li>
+        <li><a href="https://drive.google.com/file/d/1KmJM8j99b70oHvgbCFQCNPyyR4YZTsI0/view?usp=sharing">A Biomimicry Youth Design Challenge</a> entry, translating a mechanism from nature into an engineered solution. <span class="tag">design</span>
+        <li>A data project turning roller-coaster accelerometer logs from Kennywood into ride profiles, with Hunter Faderewski. <span class="tag">data</span></li>
+        <li>Card magic, which I taught for a few years at my local Chinese school. <span class="tag">sleights</span></li>
+        <li>The <a href="https://drive.google.com/drive/folders/1UIGuV9BywmbSYdc1-6k0EyxHEp2Ot_6O?usp=sharing">Cursed series,</a> an ongoing set of deliberately cursed problems and constructions, the kind that look wrong and turn out to be right. Originally designed to convince people why math always turns out so beautiful. <span class="tag">series</span>
+        <li>A <a href="https://alecks67.substack.com">blog</a>, where problems, half-finished ideas, and my personal life go to get written down. <span class="tag">alecks67</span></li>
+      </ul>
+    </div>
+  </div></div></div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer-inner">
+      <div class="lft">&copy; 2026 Alex Chen</div>
+      <div class="mid">Alexander B. Chen · <a href="mailto:alexbchen999@gmail.com">alexbchen999@gmail.com</a></div>
+      <div class="rgt"><a href="https://a-b-chen.github.io/alexbchen/">a-b-chen.github.io/alexbchen</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="app.js"></script>
+</body>
+</html>

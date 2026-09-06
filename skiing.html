@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.className += ' js';</script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Skiing — Alexander B. Chen</title>
+<meta name="description" content="Skiing — every resort I've been to, mapped, and the trips that meant the most." />
+<meta name="theme-color" content="#f6f7f4" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  /* ===== ski map ===== */
+  .map-kicker{ font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--redrule); margin:0 0 .3rem; }
+  .map-h{ font-family:var(--serif); font-size:1.55rem; font-weight:600; line-height:1.15; margin:0 0 .35rem; color:var(--ink); }
+  .map-cap{ font-family:var(--mono); font-size:.72rem; letter-spacing:.02em; color:var(--muted); margin:0 0 .2rem; }
+  .skimap-wrap{ position:relative; margin:1.25rem 0 .3rem; border:1px solid var(--rule); border-right:4px solid var(--redrule); border-radius:3px; overflow:hidden; background:#fbfbf9; }
+  #skimap{ display:block; width:100%; height:auto; touch-action:manipulation; }
+  .ski-land{ fill:var(--ink); fill-opacity:.05; stroke:var(--rule); stroke-width:1.1; vector-effect:non-scaling-stroke; }
+  .ski-49{ stroke:var(--rule); stroke-width:1; stroke-dasharray:5 6; vector-effect:non-scaling-stroke; }
+  .state{ cursor:pointer; }
+  .state:focus{ outline:none; }
+  .state-shape{ fill:var(--accent); fill-opacity:.07; stroke:var(--accent); stroke-opacity:.5; stroke-width:1.4; vector-effect:non-scaling-stroke; transition:fill-opacity .18s ease, stroke-opacity .18s ease; }
+  .state:hover .state-shape, .state:focus .state-shape{ fill-opacity:.17; stroke-opacity:.9; }
+  .state-pin circle{ fill:var(--accent); stroke:#f6f7f4; stroke-width:2; vector-effect:non-scaling-stroke; }
+  .state-pin .dot{ fill:#f6f7f4; stroke:none; }
+  .state-label{ font-family:var(--mono); font-size:15px; letter-spacing:.05em; fill:var(--ink);
+    paint-order:stroke; stroke:#fbfbf9; stroke-width:3.2px; stroke-linejoin:round; transition:opacity .25s ease; }
+  #ski-states.dim .state:not(.active) .state-shape{ fill-opacity:.03; stroke-opacity:.22; }
+  .state.active .state-shape{ fill-opacity:.11; stroke-opacity:.7; }
+  #skimap.zoomed .state-pin, #skimap.zoomed .state-label{ opacity:0; pointer-events:none; }
+  .resortset{ opacity:0; transition:opacity .3s ease; pointer-events:none; }
+  .resortset.on{ opacity:1; pointer-events:auto; }
+  .resort{ cursor:pointer; }
+  .resort:focus{ outline:none; }
+  .resort-pin{ fill:var(--redrule); stroke:#fbfbf9; stroke-width:1.6px; vector-effect:non-scaling-stroke;
+    transition:transform .12s ease; transform-box:fill-box; transform-origin:center bottom; }
+  .resort:hover .resort-pin, .resort:focus .resort-pin{ transform:translateY(-1px) scale(1.08); }
+  .resort-hole{ fill:#fbfbf9; }
+  .resort-lead{ stroke:var(--muted); stroke-width:1; vector-effect:non-scaling-stroke; opacity:.7; }
+  .resort-label{ font-family:var(--serif); font-size:12.5px; font-weight:500; fill:var(--ink);
+    paint-order:stroke; stroke:#fbfbf9; stroke-width:3.4px; stroke-linejoin:round; }
+  #ski-back{ position:absolute; top:10px; left:10px; display:none; align-items:center; gap:.4rem;
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.03em; color:var(--accent);
+    background:rgba(251,251,249,.86); border:1px solid var(--rule); border-radius:3px;
+    padding:.36rem .62rem; cursor:pointer; }
+  #ski-back:hover{ border-color:var(--accent); }
+  #ski-back.show{ display:inline-flex; }
+  #ski-here{ position:absolute; top:11px; right:12px; font-family:var(--mono); font-size:.68rem;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--muted); pointer-events:none; }
+  .map-legend{ font-family:var(--mono); font-size:.68rem; color:var(--muted); margin:.55rem 0 0;
+    display:flex; gap:1.2rem; flex-wrap:wrap; align-items:center; }
+  .map-legend .k{ display:inline-flex; align-items:center; gap:.4rem; }
+  .lg-dot{ width:.6rem; height:.6rem; border-radius:50%; background:var(--accent); display:inline-block; }
+  .lg-pin{ width:.55rem; height:.55rem; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--redrule); display:inline-block; }
+  @media (max-width:640px){
+    .state-label{ font-size:19px; }
+    .resort-label{ font-size:15px; }
+    .map-h{ font-size:1.3rem; }
+  }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="nav-name" href="index.html"><span class="sec-sign">(𝜀,𝛿)-</span>Alexander B. Chen<span class="sec-sign">-(𝜉,𝜂)</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="works.html">Works</a>
+      <a href="olympiads.html">Olympiads</a>
+      <a href="interests.html" class="active">Interests</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+<header id="top" class="band hero hero--page">
+  <div class="wrap">
+    <div class="hero-inner">
+      <p class="eyebrow"><a href="interests.html" style="color:var(--accent);text-decoration:none;">&larr; Interests</a></p>
+      <h1 class="title">Skiing</h1>
+      <p class="standfirst">The one thing I don&rsquo;t keep score of</p>
+    </div>
+  </div>
+</header>
+<span style="display: block; margin-top: -5em;"></span>
+<section id="map" class="band">
+  <div class="wrap"><div class="band-inner">
+    <p class="map-kicker">Where I&rsquo;ve skied</p>
+    <h2 class="map-h">Every resort, mapped</h2>
+    <p class="map-cap">Tap a state to zoom in, then tap a resort to read what it meant.</p>
+    <div class="skimap-wrap">
+      <svg id="skimap" viewBox="0 0 1020 700" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Map of ski resorts across North America">
+        <defs>
+          <pattern id="ski-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+            <circle cx="1.3" cy="1.3" r="1.3" fill="var(--rule)" opacity="0.6"/>
+          </pattern>
+          <filter id="ski-soft" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="1.1" stdDeviation="1.1" flood-color="#1a1b18" flood-opacity="0.30"/>
+          </filter>
+        </defs>
+        <rect x="-320" y="-320" width="1660" height="1340" fill="url(#ski-dots)"/>
+        <path class="ski-land" d="M 5.2 86.4 L 13.8 136.8 L 10.4 208.8 L 13.8 278.4 L 20.7 314.4 L 51.8 360.0 L 76.0 420.0 L 132.9 463.2 L 177.8 463.2 L 240.0 496.8 L 290.0 496.8 L 319.4 484.8 L 379.8 552.0 L 407.4 532.8 L 447.1 614.4 L 481.7 626.4 L 523.1 544.8 L 587.0 552.0 L 621.5 520.8 L 647.4 520.8 L 707.8 528.0 L 728.5 554.4 L 770.0 643.2 L 761.3 480.0 L 790.7 434.4 L 847.7 362.4 L 861.5 312.0 L 880.5 276.0 L 932.3 254.4 L 949.5 247.2 L 951.3 196.8 L 1001.3 170.4 L 963.3 110.4 L 923.6 168.0 L 830.4 204.0 L 790.7 208.8 L 733.7 247.2 L 725.1 144.0 L 638.8 96.0 L 517.9 72.0 L 362.5 72.0 L 189.9 72.0 L 34.5 72.0 L 31.1 91.2 Z"/>
+        <path class="ski-land" d="M 0.0 72.0 L 69.1 72.0 L 69.1 9.6 L 6.9 9.6 L -10.4 38.4 Z"/>
+        <line class="ski-49" x1="8.6" y1="72.0" x2="517.9" y2="72.0"/>
+        <g id="ski-states">
+          <g class="state" data-state="WY" data-name="Wyoming" data-vb="114.7 112.7 260.0 178.4" tabindex="0" role="button" aria-label="Wyoming, 1 resort(s)">
+            <path class="state-shape" d="M 240.8 168.0 L 361.7 168.0 L 361.7 264.0 L 240.8 264.0 Z"/>
+            <g class="state-pin"><circle cx="244.7" cy="201.9" r="7.6"/><circle class="dot" cx="244.7" cy="201.9" r="2.6"/></g>
+            <text class="state-label" x="244.7" y="187.9" text-anchor="middle">WY &middot; 1</text>
+          </g>
+          <g class="state" data-state="CO" data-name="Colorado" data-vb="270.5 261.2 110.0 75.5" tabindex="0" role="button" aria-label="Colorado, 3 resort(s)">
+            <path class="state-shape" d="M 275.4 264.0 L 396.2 264.0 L 396.2 360.0 L 275.4 360.0 Z"/>
+            <g class="state-pin"><circle cx="325.9" cy="298.5" r="7.6"/><circle class="dot" cx="325.9" cy="298.5" r="2.6"/></g>
+            <text class="state-label" x="325.9" y="284.5" text-anchor="middle">CO &middot; 3</text>
+          </g>
+          <g class="state" data-state="UT" data-name="Utah" data-vb="155.5 222.5 150.0 102.9" tabindex="0" role="button" aria-label="Utah, 2 resort(s)">
+            <path class="state-shape" d="M 189.0 240.0 L 240.8 240.0 L 240.8 264.0 L 275.4 264.0 L 275.4 360.0 L 189.0 360.0 Z"/>
+            <g class="state-pin"><circle cx="230.5" cy="274.0" r="7.6"/><circle class="dot" cx="230.5" cy="274.0" r="2.6"/></g>
+            <text class="state-label" x="230.5" y="260.0" text-anchor="middle">UT &middot; 2</text>
+          </g>
+          <g class="state" data-state="VT" data-name="Vermont" data-vb="825.2 145.9 150.0 102.9" tabindex="0" role="button" aria-label="Vermont, 2 resort(s)">
+            <path class="state-shape" d="M 891.7 167.8 L 923.5 167.8 L 923.5 180.0 L 907.1 222.5 L 893.2 222.0 L 890.3 201.6 Z"/>
+            <g class="state-pin"><circle cx="900.2" cy="197.4" r="7.6"/><circle class="dot" cx="900.2" cy="197.4" r="2.6"/></g>
+            <text class="state-label" x="900.2" y="183.4" text-anchor="middle">VT &middot; 2</text>
+          </g>
+          <g class="state" data-state="PA" data-name="Pennsylvania" data-vb="713.2 231.8 150.0 102.9" tabindex="0" role="button" aria-label="Pennsylvania, 3 resort(s)">
+            <path class="state-shape" d="M 767.9 240.0 L 868.4 240.0 L 868.4 255.4 L 861.0 288.0 L 856.0 294.7 L 767.9 294.7 Z"/>
+            <g class="state-pin"><circle cx="788.5" cy="284.6" r="7.6"/><circle class="dot" cx="788.5" cy="284.6" r="2.6"/></g>
+            <text class="state-label" x="788.5" y="270.6" text-anchor="middle">PA &middot; 3</text>
+          </g>
+          <g class="state" data-state="BC" data-name="British Columbia" data-vb="-94.6 -44.0 260.0 178.4" tabindex="0" role="button" aria-label="British Columbia, 1 resort(s)">
+            <path class="state-shape" d="M 0.0 72.0 L 77.7 72.0 L 77.7 12.0 L 6.9 12.0 L -10.4 38.4 Z"/>
+            <g class="state-pin"><circle cx="35.4" cy="45.2" r="7.6"/><circle class="dot" cx="35.4" cy="45.2" r="2.6"/></g>
+            <text class="state-label" x="35.4" y="31.2" text-anchor="middle">BC &middot; 1</text>
+          </g>
+        </g>
+        <g id="ski-resortsets">
+          <g class="resortset" data-state="WY" hidden>
+            <a href="ski-resorts.html#jackson" class="resort" aria-label="Jackson Hole" transform="translate(244.7 201.9) scale(0.2549)">
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-19.6" text-anchor="start">Jackson Hole</text>
+            </a>
+          </g>
+          <g class="resortset" data-state="CO" hidden>
+            <a href="ski-resorts.html#vail" class="resort" aria-label="Vail" transform="translate(321.9 297.5) scale(0.1078)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="-16" y2="-32"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="-16" y="-32" text-anchor="end">Vail</text>
+            </a>
+            <a href="ski-resorts.html#breckenridge" class="resort" aria-label="Breckenridge" transform="translate(326.9 300.5) scale(0.1078)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="0" y2="20"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="0" y="20" text-anchor="middle">Breckenridge</text>
+            </a>
+            <a href="ski-resorts.html#keystone" class="resort" aria-label="Keystone" transform="translate(329.1 297.4) scale(0.1078)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="16" y2="-32"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-32" text-anchor="start">Keystone</text>
+            </a>
+          </g>
+          <g class="resortset" data-state="UT" hidden>
+            <a href="ski-resorts.html#alta" class="resort" aria-label="Alta" transform="translate(234.7 270.9) scale(0.1471)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="16" y2="-32"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-32" text-anchor="start">Alta</text>
+            </a>
+            <a href="ski-resorts.html#snowbird" class="resort" aria-label="Snowbird" transform="translate(226.4 277.1) scale(0.1471)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="-16" y2="18"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="-16" y="18" text-anchor="end">Snowbird</text>
+            </a>
+          </g>
+          <g class="resortset" data-state="VT" hidden>
+            <a href="ski-resorts.html#mount-snow" class="resort" aria-label="Mount Snow" transform="translate(899.1 217.0) scale(0.1471)">
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-19.6" text-anchor="start">Mount Snow</text>
+            </a>
+            <a href="ski-resorts.html#smugglers" class="resort" aria-label="Smugglers&rsquo; Notch" transform="translate(901.4 177.8) scale(0.1471)">
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-19.6" text-anchor="start">Smugglers&rsquo; Notch</text>
+            </a>
+          </g>
+          <g class="resortset" data-state="PA" hidden>
+            <a href="ski-resorts.html#seven-springs" class="resort" aria-label="Seven Springs" transform="translate(789.0 287.4) scale(0.1471)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="16" y2="-32"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-32" text-anchor="start">Seven Springs</text>
+            </a>
+            <a href="ski-resorts.html#hidden-valley" class="resort" aria-label="Hidden Valley" transform="translate(795.2 289.6) scale(0.1471)">
+              <line class="resort-lead" x1="0" y1="-19.6" x2="16" y2="18"/>
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="18" text-anchor="start">Hidden Valley</text>
+            </a>
+            <a href="ski-resorts.html#boyce-park" class="resort" aria-label="Boyce Park" transform="translate(781.3 276.9) scale(0.1471)">
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="-16" y="-19.6" text-anchor="end">Boyce Park</text>
+            </a>
+          </g>
+          <g class="resortset" data-state="BC" hidden>
+            <a href="ski-resorts.html#whistler" class="resort" aria-label="Whistler Blackcomb" transform="translate(35.4 45.2) scale(0.2549)">
+              <path class="resort-pin" d="M 0 0 c -6.6 -8.2 -12 -12.4 -12 -19.6 a 12 12 0 1 1 24 0 c 0 7.2 -5.4 11.4 -12 19.6 Z" filter="url(#ski-soft)"/>
+              <circle class="resort-hole" cx="0" cy="-19.6" r="4.3"/>
+              <text class="resort-label" x="16" y="-19.6" text-anchor="start">Whistler Blackcomb</text>
+            </a>
+          </g>
+        </g>
+      </svg>
+      <button id="ski-back" type="button" aria-label="Back to North America">&larr; North America</button>
+      <div id="ski-here" aria-hidden="true"></div>
+    </div>
+    <div class="map-legend">
+      <span class="k"><span class="lg-dot"></span> state (tap to zoom)</span>
+      <span class="k"><span class="lg-pin"></span> resort (tap for the story)</span>
+    </div>
+  </div></div>
+</section>
+<section id="journey" class="band band--tint">
+  <div class="wrap"><div class="band-inner"><div class="sec-grid">
+    <div class="sec-aside">
+      <h2 class="sec-h">The long way down</h2>
+      <span class="sec-mark-rule" aria-hidden="true"></span>
+    </div>
+    <div class="sec-content">
+      <p>I&rsquo;ve been skiing since I was eight, and it&rsquo;s the one thing I&rsquo;ve stuck with that was never about winning anything. Everything else I care about keeps score &mdash; math has ratings, swimming has a clock &mdash; and skiing just doesn&rsquo;t. That&rsquo;s most of why I love it.</p>
+      <figure><img src="img/ski-summit.jpg" width="700" height="500" loading="lazy" alt="At a snowy summit with a mountain range behind, arms out." /><figcaption>Top of the mountain.</figcaption></figure>
+      <p>It started at Mount Snow, in Vermont. I spent that whole first trip in a permanent pizza-wedge, falling over on the flat parts, doing everything a beginner does. I wasn&rsquo;t good and I didn&rsquo;t care &mdash; I just liked being up there in the cold, pointing downhill.</p>
+      <p>Back home the hills were small. Seven Springs, Hidden Valley, Boyce Park &mdash; none of them are real mountains, but they were close, and they&rsquo;re where I quietly put in the reps. East-coast skiing is mostly ice, short runs, and night sessions under the lights, and it turns out that&rsquo;s a great way to learn. Once you can hold an edge on a sheet of ice, soft snow feels like a gift.</p>
+      <p>Smugglers&rsquo; Notch is where it clicked. I finally dropped the wedge and started making real parallel turns, and skiing stopped being survival and started being fun. Every skier remembers the first day the mountain feels like it&rsquo;s working with them instead of against them. That was mine.</p>
+      <p>Then the mountains got big. For the last four winters I&rsquo;ve gone to Colorado over winter break &mdash; Vail, Breckenridge, and Keystone on rotation &mdash; and that&rsquo;s where I actually became a skier. Long steep runs, trees, bumps, real vertical. There&rsquo;s a specific kind of tired you only get after a full day at altitude, and I&rsquo;ve come to look forward to it every December.</p>
+      <p>One of those western trips was to Jackson Hole, which is about as serious as inbounds terrain gets in the States. I skied it with a cast on my left elbow. Not the smartest call I&rsquo;ve ever made, but sitting in the lodge while everyone else rode was never really on the table. I took it carefully, one arm mostly along for the ride, and I&rsquo;m still a little proud of that one.</p>
+      <p>Utah was the powder. Alta and Snowbird get the light, deep snow that skiers write poems about, and a couple of those days &mdash; floating through cold smoke, barely able to see my own skis &mdash; are some of the best I&rsquo;ve ever had on a mountain. Alta still won&rsquo;t let snowboarders on, which somehow makes it feel even more like a secret.</p>
+      <p>But the mountain that&rsquo;s pushed me hardest is Whistler, which I&rsquo;ve skied every spring break for four years. It&rsquo;s where carving finally made sense to me &mdash; tipping the skis onto their edges and letting them arc through the turn instead of skidding. It&rsquo;s also where I got humbled: I bombed The Saddle at something like eighty miles an hour, lost it, and crashed about as hard as I ever have. I lay there for a second taking a full inventory of my limbs, then got up and rode the lift again. I&rsquo;d do it again, honestly. Maybe a hair slower.</p>
+      <p>Learning to carve felt like unlocking a cheat code, but it didn&rsquo;t solve everything. Pure edge-to-edge railing works beautifully on a freshly groomed highway, but the moment you drop off the corduroy into thick, untracked snow, those razor-sharp edges become a liability. Carving relies on resistance&mdash;something firm to push against&mdash;and deep snow offers none. My first real powder days at Whistler were a brutal lesson in humility, as I spent hours catching tips, digging trenches, and unceremoniously drowning in deep whiteouts.</p>
+      <p>Whistler was where I finally had to unlearn my hard-earned East Coast habits. In the high alpine of Harmony Bowl, trying to carve just meant sinking my downhill ski and getting launched headfirst into a drift. My thighs burned as I fought the snow, digging my skis out one exhausted leg at a time. Powder requires a totally different language: you aren&rsquo;t slicing lines into the mountain, you&rsquo;re floating on top of it. It&rsquo;s less about driving an edge into ice and more about staying centered over both feet, treating your skis like a single wide surfing platform, and finding a rhythmic bounce from turn to turn.</p>
+       <p>It took a massive storm on Blackcomb, Spanky's Ladder for the movement to finally make sense. Instead of forcing my turns, I relaxed my upper body, let my knees act as shock absorbers, and allowed the snow to push back against me. When it clicked, the struggle completely vanished. There was no chatter, no sound of metal scraping ice, just a silent, weightless float as snow sprayed over my jacket with every turn. Whistler humbled me on the ice, but it rewarded me in the deep stuff&mdash;proving that becoming a better skier isn&rsquo;t about mastering one single technique, but learning how to adapt to whatever the mountain hands you.</p>
+      <p>That&rsquo;s the thing about a sport with no scoreboard: nobody makes you push it, so when you do, it&rsquo;s entirely because you want to. No ratings, no splits, no one grading the landing. Just a mountain, a good pair of skis, and the long way down &mdash; and a map that keeps picking up a few more pins every year.</p>
+    </div>
+  </div></div></div>
+</section>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer-inner">
+      <div class="lft">&copy; 2026 Alex Chen</div>
+      <div class="mid">Alexander B. Chen · <a href="mailto:alexbchen999@gmail.com">alexbchen999@gmail.com</a></div>
+      <div class="rgt"><a href="https://a-b-chen.github.io/alexbchen/">a-b-chen.github.io/alexbchen</a></div>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var svg=document.getElementById('skimap'); if(!svg) return;
+  var FULL=[0,0,1020,700];
+  var back=document.getElementById('ski-back');
+  var here=document.getElementById('ski-here');
+  var states=[].slice.call(svg.querySelectorAll('.state'));
+  var sets=[].slice.call(svg.querySelectorAll('.resortset'));
+  var statesG=document.getElementById('ski-states');
+  var current=null, raf=null;
+  function vbNow(){ return svg.getAttribute('viewBox').trim().split(/\s+/).map(Number); }
+  function setVB(v){ svg.setAttribute('viewBox', v.map(function(n){return Math.round(n*10)/10;}).join(' ')); }
+  function ease(t){ return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+  function animate(to,dur,cb){
+    var from=vbNow(), start=null;
+    if(raf) cancelAnimationFrame(raf);
+    function step(ts){ if(start===null) start=ts;
+      var t=Math.min(1,(ts-start)/dur), e=ease(t);
+      setVB(from.map(function(f,i){return f+(to[i]-f)*e;}));
+      if(t<1) raf=requestAnimationFrame(step); else { raf=null; if(cb) cb(); }
+    }
+    raf=requestAnimationFrame(step);
+  }
+  function showSet(code){
+    sets.forEach(function(g){
+      var on=g.getAttribute('data-state')===code;
+      if(on){ g.hidden=false; requestAnimationFrame(function(){ g.classList.add('on'); }); }
+      else { g.classList.remove('on'); g.hidden=true; }
+    });
+  }
+  function select(code,name){
+    var st=states.filter(function(s){return s.getAttribute('data-state')===code;})[0]; if(!st) return;
+    current=code;
+    svg.classList.add('zoomed'); statesG.classList.add('dim');
+    states.forEach(function(s){ s.classList.toggle('active', s===st); });
+    animate(st.getAttribute('data-vb').trim().split(/\s+/).map(Number), 640, function(){ showSet(code); });
+    back.classList.add('show');
+    if(here) here.textContent=name||'';
+    back.focus();
+  }
+  function reset(){
+    current=null;
+    sets.forEach(function(g){ g.classList.remove('on'); g.hidden=true; });
+    svg.classList.remove('zoomed'); statesG.classList.remove('dim');
+    states.forEach(function(s){ s.classList.remove('active'); });
+    animate(FULL, 560);
+    back.classList.remove('show');
+    if(here) here.textContent='';
+  }
+  states.forEach(function(s){
+    s.addEventListener('click', function(){ select(s.getAttribute('data-state'), s.getAttribute('data-name')); });
+    s.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); select(s.getAttribute('data-state'), s.getAttribute('data-name')); } });
+  });
+  back.addEventListener('click', reset);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && current) reset(); });
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="app.js"></script>
+</body>
+</html>
